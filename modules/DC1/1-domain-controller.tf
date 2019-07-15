@@ -1,8 +1,7 @@
 locals{
     virtual_machine_name  = "DC1"
-
 }
-resource "azurerm_virtual_machine" "vm" {
+resource "azurerm_virtual_machine" "dc1" {
     name                  = "${local.virtual_machine_name}"
     location              = "${var.location}"
     resource_group_name   = "${var.resource_group_name}"
@@ -31,5 +30,7 @@ resource "azurerm_virtual_machine" "vm" {
     }
 
     os_profile_windows_config{
+        provision_vm_agent        = true
+        enable_automatic_upgrades = true
     }
 }

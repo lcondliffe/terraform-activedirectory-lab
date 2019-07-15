@@ -4,7 +4,7 @@ provider "azurerm" {
 
 # Resource Group
 resource "azurerm_resource_group" "lw-terraform-test" {
-    name     = "LW-Terraform_Test"
+    name     = "LW-Terraform"
     location = "uksouth"
 }
 
@@ -51,7 +51,7 @@ resource "azurerm_public_ip" "publicip" {
     public_ip_address_allocation = "dynamic"
 }
 
-# VM1 NIC
+# DC1 NIC
 resource "azurerm_network_interface" "nic" {
     name                      = "NIC1"
     location                  = "uksouth"
@@ -66,33 +66,14 @@ resource "azurerm_network_interface" "nic" {
     }
 }
 
-resource "azurerm_virtual_machine" "vm" {
-    name                  = "VM1"
-    location              = "uksouth"
-    resource_group_name   = "${azurerm_resource_group.lw-terraform-test.name}"
-    vm_size               = "Standard_B2s"
-    network_interface_ids = ["${azurerm_network_interface.nic.id}"]
-
-    storage_os_disk {
-        name              = "OsDisk"
-        caching           = "ReadWrite"
-        create_option     = "FromImage"
-        managed_disk_type = "Premium_LRS"
-    }
-
-    storage_image_reference {
-        publisher = "MicrosoftWindowsServer"
-        offer     = "WindowsServer"
-        sku       = "2019-Datacenter"
-        version   = "latest"
-  }
-
-    os_profile {
-        computer_name  = "VM1"
-        admin_username = "luke"
-        admin_password = "Terminal12"
-    }
-
-    os_profile_windows_config{
-    }
+module "domain-controller"{
+    source              = "./modules/DC1"
+    location            = "${azurerm_resource_group.lw-terraform-test.location}"
+    resource_group_name = "${azurerm_resource_group.lw-terraform-test.name}"
+    subnet_id           = "${azurerm_subnet.subnet.id}"
+    nic_id              = "${azurerm_network_interface.nic.id}"
+    active_directory_domain       = "lw.lab"
+    active_directory_netbios_name = "lw.lab"
+    admin_username                = "luke"
+    admin_password                = "Terminal12"
 }
