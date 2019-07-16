@@ -4,7 +4,7 @@ provider "azurerm" {
 
 # Resource Group
 resource "azurerm_resource_group" "lw-terraform-test" {
-    name     = "LW-Terraform"
+    name     = "LW-Terraform-ADLab"
     location = "uksouth"
 }
 
@@ -73,7 +73,7 @@ module "domain-controller"{
     subnet_id           = "${azurerm_subnet.subnet.id}"
     nic_id              = "${azurerm_network_interface.nic.id}"
     active_directory_domain       = "lw.lab"
-    active_directory_netbios_name = "lw.lab"
+    active_directory_netbios_name = "LWLAB"
     admin_username                = "luke"
-    admin_password                = "Terminal12"
+    admin_password                = "Terminal22"
 }
