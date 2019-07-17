@@ -7,6 +7,7 @@ resource "azurerm_virtual_machine" "dc1" {
     resource_group_name   = "${var.resource_group_name}"
     vm_size               = "Standard_B2s"
     network_interface_ids = ["${var.nic_id}"]
+    delete_os_disk_on_termination = true
 
     storage_os_disk {
         name              = "OsDisk"

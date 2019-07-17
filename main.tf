@@ -77,3 +77,14 @@ module "domain-controller"{
     admin_username                = "luke"
     admin_password                = "Terminal22"
 }
+
+module "client1"{
+    source      = "./modules/CLI1"
+    location            = "${azurerm_resource_group.lw-terraform-test.location}"
+    resource_group_name = "${azurerm_resource_group.lw-terraform-test.name}"
+    subnetID           = "${azurerm_subnet.subnet.id}"
+    network_security_group_id = "${azurerm_network_security_group.nsg.id}"
+    active_directory_domain   = "lw.lab"
+    admin_username            = "luke"
+    admin_password            = "Terminal22"
+}
