@@ -1,12 +1,28 @@
 locals{
     virtual_machine_name  = "DC1"
 }
+
+# DC1 NIC
+resource "azurerm_network_interface" "dc1_nic" {
+    name                      = "dc1_nic"
+    location                  = "uksouth"
+    resource_group_name       = "${var.resource_group_name}"
+    network_security_group_id = "${var.network_security_group_id}"
+
+    ip_configuration {
+        name                          = "dc1"
+        subnet_id                     = "${var.subnet_id}"
+        private_ip_address_allocation = "dynamic"
+        public_ip_address_id          = "${var.public_ip_id}"
+    }
+}
+
 resource "azurerm_virtual_machine" "dc1" {
     name                  = "${local.virtual_machine_name}"
     location              = "${var.location}"
     resource_group_name   = "${var.resource_group_name}"
     vm_size               = "Standard_B2s"
-    network_interface_ids = ["${var.nic_id}"]
+    network_interface_ids = ["${azurerm_network_interface.dc1_nic.id}"]
     delete_os_disk_on_termination = true
 
     storage_os_disk {

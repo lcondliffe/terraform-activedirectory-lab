@@ -10,9 +10,14 @@ variable "subnet_id" {
   description = "The Subnet ID which the Domain Controller's NIC should be created in"
 }
 
-variable "nic_id" {
-    description = "The unique identifier of the VM NIC for the domain controller VM."
+variable "network_security_group_id" {
+  description = "The ID of the NSG created in main."
 }
+
+variable "public_ip_id" {
+  description = "ID of the public IP address for the environment created in main."
+}
+
 variable "active_directory_domain" {
   description = "The name of the Active Directory domain, for example `consoto.local`"
 }

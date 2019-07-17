@@ -51,27 +51,13 @@ resource "azurerm_public_ip" "publicip" {
     public_ip_address_allocation = "dynamic"
 }
 
-# DC1 NIC
-resource "azurerm_network_interface" "nic" {
-    name                      = "NIC1"
-    location                  = "uksouth"
-    resource_group_name       = "${azurerm_resource_group.lw-terraform-test.name}"
-    network_security_group_id = "${azurerm_network_security_group.nsg.id}"
-
-    ip_configuration {
-        name                          = "myNICConfg"
-        subnet_id                     = "${azurerm_subnet.subnet.id}"
-        private_ip_address_allocation = "dynamic"
-        public_ip_address_id          = "${azurerm_public_ip.publicip.id}"
-    }
-}
-
 module "domain-controller"{
     source              = "./modules/DC1"
     location            = "${azurerm_resource_group.lw-terraform-test.location}"
     resource_group_name = "${azurerm_resource_group.lw-terraform-test.name}"
     subnet_id           = "${azurerm_subnet.subnet.id}"
-    nic_id              = "${azurerm_network_interface.nic.id}"
+    network_security_group_id = "${azurerm_network_security_group.nsg.id}"
+    public_ip_id        = "${azurerm_public_ip.publicip.id}"
     active_directory_domain       = "lw.lab"
     active_directory_netbios_name = "LWLAB"
     admin_username                = "luke"
