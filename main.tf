@@ -58,17 +58,17 @@ module "domain-controller"{
     subnet_id           = "${azurerm_subnet.subnet.id}"
     network_security_group_id = "${azurerm_network_security_group.nsg.id}"
     public_ip_id        = "${azurerm_public_ip.publicip.id}"
-    active_directory_domain       = "lw.lab"
-    active_directory_netbios_name = "LWLAB"
+    active_directory_domain       = "lab.local"
+    active_directory_netbios_name = "LABLOCAL"
     admin_username                = "luke"
     admin_password                = "Terminal22"
 }
 
 module "client1"{
     source      = "./modules/CLI1"
-    location            = "${azurerm_resource_group.lw-terraform-test.location}"
+    location            = "${module.domain-controller.out_dc_location}"
     resource_group_name = "${azurerm_resource_group.lw-terraform-test.name}"
-    subnetID           = "${azurerm_subnet.subnet.id}"
+    subnetID            = "${azurerm_subnet.subnet.id}"
     network_security_group_id = "${azurerm_network_security_group.nsg.id}"
     active_directory_domain   = "lw.lab"
     admin_username            = "luke"
