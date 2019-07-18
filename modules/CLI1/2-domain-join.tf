@@ -11,7 +11,7 @@ resource "azurerm_virtual_machine_extension" "domain-join" {
     {
         "Name": "lab.local",
         "OUPath": "OU=Computers,DC=lab,DC=local",
-        "User": "lab.local\\luke",
+        "User": "lab.local\\${var.admin_username}",
         "Restart": "true",
         "Options": "3"
     }
@@ -19,7 +19,7 @@ SETTINGS
 
   protected_settings = <<PROTECTED_SETTINGS
     {
-        "Password": "Terminal12"
+        "Password": "${var.admin_password}"
     }
 PROTECTED_SETTINGS
 }
