@@ -1,13 +1,23 @@
+
+resource "azurerm_public_ip" "client1_pip" {
+    name                         = "client1-publicip"
+    location                     = "uksouth"
+    resource_group_name          = "${var.resource_group_name}"
+    public_ip_address_allocation = "dynamic"
+}
+
 resource "azurerm_network_interface" "client1_nic" {
     name                      = "client1_nic"
     location                  = "uksouth"
     resource_group_name       = "${var.resource_group_name}"
     network_security_group_id = "${var.network_security_group_id}"
+    dns_servers               = ["10.1.0.5"]
 
     ip_configuration {
         name                          = "client1"
         subnet_id                     = "${var.subnetID}"
         private_ip_address_allocation = "dynamic"
+        public_ip_address_id          = "${azurerm_public_ip.client1_pip.id}"
     }
 }
 

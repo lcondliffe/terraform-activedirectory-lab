@@ -5,13 +5,13 @@ resource "azurerm_virtual_machine_extension" "domain-join" {
   virtual_machine_name = "${azurerm_virtual_machine.client1.name}"
   publisher            = "Microsoft.Compute"
   type                 = "JsonADDomainExtension"
-  type_handler_version = "1.0"
+  type_handler_version = "1.3"
 
   settings = <<SETTINGS
     {
-        "Name": "lab.local",
-        "OUPath": "OU=Computers,DC=lab,DC=local",
-        "User": "lab.local\\${var.admin_username}",
+        "Name": "${var.active_directory_domain}",
+        "OUPath": "",
+        "User": "${var.active_directory_domain}\\${var.admin_username}",
         "Restart": "true",
         "Options": "3"
     }
