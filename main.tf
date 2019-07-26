@@ -4,12 +4,12 @@ provider "azurerm" {
 
 # Resource Group
 resource "azurerm_resource_group" "lw-terraform-test" {
-    name     = "LW-terraform-test"
+    name     = "lw-activedirectory-lab"
     location = "uksouth"
 }
 
 # Virtual Network
-resource "azurerm_virtual_network" "test" {
+resource "azurerm_virtual_network" "labnetwork" {
   name                = "lw-terraform-net"
   resource_group_name = "${azurerm_resource_group.lw-terraform-test.name}"
   location            = "${azurerm_resource_group.lw-terraform-test.location}"
