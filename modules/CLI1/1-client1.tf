@@ -11,7 +11,7 @@ resource "azurerm_network_interface" "client1_nic" {
     location                  = "uksouth"
     resource_group_name       = "${var.resource_group_name}"
     network_security_group_id = "${var.network_security_group_id}"
-    dns_servers               = ["10.1.0.5"]
+    dns_servers               = ["${var.dns_server_ip}"]
 
     ip_configuration {
         name                          = "client1"

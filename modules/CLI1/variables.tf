@@ -12,6 +12,9 @@ variable "subnetID" {
   description = "The ID of the subnet created in main."
 }
 
+variable "dns_server_ip" {
+  description = "The IP of the DC1 VM, to be used as the DNS server address for client1"
+}
 
 variable "active_directory_domain" {
   description = "The name of the Active Directory domain, for example `consoto.local`"
