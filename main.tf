@@ -69,6 +69,7 @@ module "client1"{
     location            = "${module.domain-controller.out_dc_location}"
     resource_group_name = "${azurerm_resource_group.lw-terraform-test.name}"
     subnetID            = "${azurerm_subnet.subnet.id}"
+    dns_server_ip       = "${module.domain-controller.out_dc_ipaddress}"
     network_security_group_id = "${azurerm_network_security_group.nsg.id}"
     active_directory_domain   = "lw.lab"
     admin_username            = "luke"
