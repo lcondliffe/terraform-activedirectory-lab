@@ -34,7 +34,7 @@ resource "azurerm_virtual_machine" "dc1" {
     delete_os_disk_on_termination = true
 
     storage_os_disk {
-        name              = "OsDisk"
+        name              = "DC1-OsDisk"
         caching           = "ReadWrite"
         create_option     = "FromImage"
         managed_disk_type = "Premium_LRS"

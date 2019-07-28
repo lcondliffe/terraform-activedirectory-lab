@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 # Resource Group
-resource "azurerm_resource_group" "lw-terraform-test" {
+resource "azurerm_resource_group" "lw-activedirectory-lab" {
     name     = "lw-activedirectory-lab"
     location = "uksouth"
 }
@@ -11,16 +11,16 @@ resource "azurerm_resource_group" "lw-terraform-test" {
 # Virtual Network
 resource "azurerm_virtual_network" "labnetwork" {
   name                = "lab-net"
-  resource_group_name = "${azurerm_resource_group.lw-terraform-test.name}"
-  location            = "${azurerm_resource_group.lw-terraform-test.location}"
+  resource_group_name = "${azurerm_resource_group.lw-activedirectory-lab.name}"
+  location            = "${azurerm_resource_group.lw-activedirectory-lab.location}"
   address_space       = ["10.0.0.0/16"]
 }
 
 # Subnet
 resource "azurerm_subnet" "subnet" {
     name                 = "lab-subnet"
-    resource_group_name  = "${azurerm_resource_group.lw-terraform-test.name}"
-    virtual_network_name = "${azurerm_virtual_network.test.name}"
+    resource_group_name  = "${azurerm_resource_group.lw-activedirectory-lab.name}"
+    virtual_network_name = "${azurerm_virtual_network.labnetwork.name}"
     address_prefix       = "10.0.1.0/24"
 }
 
@@ -28,7 +28,7 @@ resource "azurerm_subnet" "subnet" {
 resource "azurerm_network_security_group" "nsg" {
     name                = "Lab-NSG"
     location            = "uksouth"
-    resource_group_name = "${azurerm_resource_group.lw-terraform-test.name}"
+    resource_group_name = "${azurerm_resource_group.lw-activedirectory-lab.name}"
 
     security_rule {
         name                       = "RDP"
@@ -43,21 +43,12 @@ resource "azurerm_network_security_group" "nsg" {
     }
 }
 
-# Public IP
-resource "azurerm_public_ip" "publicip" {
-    name                         = "PIP"
-    location                     = "uksouth"
-    resource_group_name          = "${azurerm_resource_group.lw-terraform-test.name}"
-    public_ip_address_allocation = "dynamic"
-}
-
 module "domain-controller"{
     source              = "./modules/DC1"
-    location            = "${azurerm_resource_group.lw-terraform-test.location}"
-    resource_group_name = "${azurerm_resource_group.lw-terraform-test.name}"
+    location            = "${azurerm_resource_group.lw-activedirectory-lab.location}"
+    resource_group_name = "${azurerm_resource_group.lw-activedirectory-lab.name}"
     subnet_id           = "${azurerm_subnet.subnet.id}"
     network_security_group_id = "${azurerm_network_security_group.nsg.id}"
-    public_ip_id        = "${azurerm_public_ip.publicip.id}"
     active_directory_domain       = "lw.lab"
     active_directory_netbios_name = "LWLAB"
     admin_username                = "luke"
@@ -67,7 +58,7 @@ module "domain-controller"{
 module "client1"{
     source      = "./modules/CLI1"
     location            = "${module.domain-controller.out_dc_location}"
-    resource_group_name = "${azurerm_resource_group.lw-terraform-test.name}"
+    resource_group_name = "${azurerm_resource_group.lw-activedirectory-lab.name}"
     subnetID            = "${azurerm_subnet.subnet.id}"
     dns_server_ip       = "${module.domain-controller.out_dc_ipaddress}"
     network_security_group_id = "${azurerm_network_security_group.nsg.id}"

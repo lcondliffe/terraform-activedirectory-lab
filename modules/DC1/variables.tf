@@ -14,10 +14,6 @@ variable "network_security_group_id" {
   description = "The ID of the NSG created in main."
 }
 
-variable "public_ip_id" {
-  description = "ID of the public IP address for the environment created in main."
-}
-
 variable "active_directory_domain" {
   description = "The name of the Active Directory domain, for example `consoto.local`"
 }
