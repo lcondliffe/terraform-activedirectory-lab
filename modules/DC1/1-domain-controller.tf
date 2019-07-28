@@ -2,6 +2,14 @@ locals{
     virtual_machine_name  = "DC1"
 }
 
+# Public IP
+resource "azurerm_public_ip" "dc1-publicip" {
+    name                         = "dc1-pip"
+    location                     = "uksouth"
+    resource_group_name          = "${var.resource_group_name}"
+    public_ip_address_allocation = "dynamic"
+}
+
 # DC1 NIC
 resource "azurerm_network_interface" "dc1_nic" {
     name                      = "dc1_nic"
@@ -13,7 +21,7 @@ resource "azurerm_network_interface" "dc1_nic" {
         name                          = "dc1"
         subnet_id                     = "${var.subnet_id}"
         private_ip_address_allocation = "dynamic"
-        public_ip_address_id          = "${var.public_ip_id}"
+        public_ip_address_id          = "${azurerm_public_ip.dc1-publicip.id}"
     }
 }
 
